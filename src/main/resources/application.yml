@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: XSys
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration
+  datasource:
+    url: ${MYSQL_URL:jdbc:mysql://58.58.149.58:3307/play_companion?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:VwZexhdC1D}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+server:
+  port: 8080
+
+app:
+  jwt:
+    # HS256：至少 32 字节；生产环境请用环境变量覆盖
+    secret: ${JWT_SECRET:6PQudWprsm5SfFT5Efn7XNbkjwayYrP4!!}
+    expiration-hours: 24
+  cors:
+    allowed-origins: "http://localhost:5173,http://127.0.0.1:5173"

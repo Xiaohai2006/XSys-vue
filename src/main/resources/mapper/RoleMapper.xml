@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zhkj.xsys.mapper.RoleMapper">
+
+    <resultMap id="RoleResult" type="cn.zhkj.xsys.domain.Role">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+    </resultMap>
+
+    <select id="findById" resultMap="RoleResult">
+        SELECT * FROM sys_role WHERE id = #{id}
+    </select>
+
+    <select id="findByCode" resultMap="RoleResult">
+        SELECT * FROM sys_role WHERE code = #{code}
+    </select>
+
+    <select id="findAll" resultMap="RoleResult">
+        SELECT * FROM sys_role ORDER BY id ASC
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM sys_role
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sys_role (code, name, description)
+        VALUES (#{code}, #{name}, #{description})
+    </insert>
+
+    <update id="update">
+        UPDATE sys_role
+        SET code = #{code}, name = #{name}, description = #{description}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM sys_role WHERE id = #{id}
+    </delete>
+</mapper>

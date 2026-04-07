@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zhkj.xsys.mapper.MenuMapper">
+
+    <resultMap id="MenuResult" type="cn.zhkj.xsys.domain.Menu">
+        <id property="id" column="id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="title" column="title"/>
+        <result property="path" column="path"/>
+        <result property="icon" column="icon"/>
+        <result property="sortOrder" column="sort_order"/>
+        <result property="permissionCode" column="permission_code"/>
+        <result property="menuType" column="menu_type"/>
+        <result property="enabled" column="enabled"/>
+    </resultMap>
+
+    <select id="findById" resultMap="MenuResult">
+        SELECT * FROM sys_menu WHERE id = #{id}
+    </select>
+
+    <select id="findAllOrdered" resultMap="MenuResult">
+        SELECT * FROM sys_menu
+        ORDER BY COALESCE(parent_id, 0), sort_order ASC, id ASC
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM sys_menu
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sys_menu (parent_id, title, path, icon, sort_order, permission_code, menu_type, enabled)
+        VALUES (#{parentId}, #{title}, #{path}, #{icon}, #{sortOrder}, #{permissionCode}, #{menuType}, #{enabled})
+    </insert>
+
+    <update id="update">
+        UPDATE sys_menu
+        SET parent_id = #{parentId},
+            title = #{title},
+            path = #{path},
+            icon = #{icon},
+            sort_order = #{sortOrder},
+            permission_code = #{permissionCode},
+            menu_type = #{menuType},
+            enabled = #{enabled}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateSortOrder">
+        UPDATE sys_menu
+        SET parent_id = #{parentId},
+            sort_order = #{sortOrder}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM sys_menu WHERE id = #{id}
+    </delete>
+</mapper>

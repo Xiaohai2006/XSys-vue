@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zhkj.xsys.mapper.UserMapper">
+
+    <resultMap id="UserResult" type="cn.zhkj.xsys.domain.User">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="nickname" column="nickname"/>
+        <result property="enabled" column="enabled"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <select id="findByUsername" resultMap="UserResult">
+        SELECT * FROM sys_user WHERE username = #{username}
+    </select>
+
+    <select id="findById" resultMap="UserResult">
+        SELECT * FROM sys_user WHERE id = #{id}
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM sys_user
+    </select>
+
+    <select id="findAll" resultMap="UserResult">
+        SELECT * FROM sys_user ORDER BY id ASC
+    </select>
+
+    <select id="findRoleCodesByUserId" resultType="string">
+        SELECT r.code FROM sys_role r
+        INNER JOIN sys_user_role ur ON ur.role_id = r.id
+        WHERE ur.user_id = #{userId}
+    </select>
+
+    <select id="findPermissionCodesByUserId" resultType="string">
+        SELECT DISTINCT p.code FROM sys_permission p
+        INNER JOIN sys_role_permission rp ON rp.permission_id = p.id
+        INNER JOIN sys_user_role ur ON ur.role_id = rp.role_id
+        WHERE ur.user_id = #{userId}
+    </select>
+
+    <select id="findRoleIdsByUserId" resultType="long">
+        SELECT role_id FROM sys_user_role WHERE user_id = #{userId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sys_user (username, password, nickname, enabled, created_at)
+        VALUES (#{username}, #{password}, #{nickname}, #{enabled}, #{createdAt})
+    </insert>
+
+    <select id="countDailyNewUsers" resultType="cn.zhkj.xsys.dto.DailyUserStatsDto">
+        SELECT DATE(created_at) AS date, COUNT(*) AS count
+        FROM sys_user
+        WHERE DATE(created_at) BETWEEN #{startDate} AND #{endDate}
+        GROUP BY DATE(created_at)
+        ORDER BY date ASC
+    </select>
+</mapper>
